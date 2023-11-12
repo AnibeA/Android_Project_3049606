@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">3049606</string>
     <string name="title_activity_add_deck">AddDeck</string>
+    <string name="title_activity_card_interface">CardInterface</string>
 </resources>

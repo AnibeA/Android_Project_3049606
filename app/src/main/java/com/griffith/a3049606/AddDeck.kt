@@ -5,13 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,9 +59,9 @@ fun newDeck() {
         ) {
             Surface(
                 modifier = Modifier
-                    .height(450.dp)
+                    .height(70.dp)
                     .width(350.dp)
-                    .padding(5.dp),
+                    .padding(2.dp),
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -71,7 +77,76 @@ fun newDeck() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
             }
+
+            Spacer(modifier = Modifier.size(15.dp))
+
+            Surface(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(350.dp)
+                    .padding(2.dp),
+                color = Color.White,
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                // Use remember to create a state variable
+                var cardFront by remember { mutableStateOf(TextFieldValue("")) }
+
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = cardFront,
+                    onValueChange = { cardFront = it },
+                    label = { Text("Front") },
+                    placeholder = { Text("Front of card") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                )
+            }
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Surface(
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(350.dp)
+                    .padding(2.dp),
+                color = Color.White,
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                // Use remember to create a state variable
+                var cardBack by remember { mutableStateOf(TextFieldValue("")) }
+
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = cardBack,
+                    onValueChange = { cardBack = it },
+                    label = { Text("Back") },
+                    placeholder = { Text("Back of card") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                )
+            }
         }
+    Row( //set the row to the bottom right of the activity
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.End
+    ){
+        Surface(
+            Modifier.padding(25.dp),
+            //color = Color(120, 200, 150),
+            shape = RoundedCornerShape(20.dp)
+        ){
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(Color(120,200,150)),
+                modifier = Modifier
+                    .size(90.dp, 40.dp) // Sets the width and height of the button
+            ){
+                Text("Done")
+            }
+        }
+
+            
+
+    }
+
     }
 }
 
