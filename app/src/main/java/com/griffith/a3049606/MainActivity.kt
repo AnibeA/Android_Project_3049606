@@ -27,86 +27,87 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-
-
+// Main Activity
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeScreen()
+            HomeScreen() // Set the content to the HomeScreen composable function
         }
     }
 }
 
+// Preview function for the HomeScreen composable
 @Preview
 @Composable
 fun HomeScreen() {
-    val context = LocalContext.current
+    val context = LocalContext.current // Retrieve the current context
+
     Surface(
-        Modifier.fillMaxSize(),
-        color = Color(150, 216, 250)
-        ){
+        Modifier.fillMaxSize(), // Set the Surface to fill the entire available size
+        color = Color(150, 216, 250) // Set the background color
+    ) {
         Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+            verticalArrangement = Arrangement.Top, // Align children vertically at the top
+            horizontalAlignment = Alignment.Start // Align children horizontally at the start
         ) {
             LazyColumn {
                 item {
                     ClickableItem("Deck 1") {
-                        // Handle item click, for example, navigate to another activity
+                        // Handle item click, for example, navigate to another activity (CardInterface)
                         val intent = Intent(context, CardInterface::class.java)
                         context.startActivity(intent)
                     }
                 }
                 item {
                     ClickableItem("Deck 2") {
-                        // Handle item click, for example, navigate to another activity
+                        // Handle item click, for example, navigate to another activity (CardInterface)
                         val intent = Intent(context, CardInterface::class.java)
                         context.startActivity(intent)
                     }
                 }
                 // Add more items as needed
             }
-
         }
 
         Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.End
+            verticalAlignment = Alignment.Bottom, // Align the row's children vertically at the bottom
+            horizontalArrangement = Arrangement.End // Align the row's children horizontally at the end
         ) {
             Surface(
-                Modifier.padding(25.dp),
-                color = Color(120, 200, 150),
-                shape = RoundedCornerShape(10.dp)
+                Modifier.padding(25.dp), // Apply padding to the Surface
+                color = Color(120, 200, 150), // Set the background color
+                shape = RoundedCornerShape(10.dp) // Apply rounded corners to the Surface
             ) {
                 FloatingActionButton(
-                    containerColor = Color(150, 216, 250),
-                    contentColor = Color.White,
+                    containerColor = Color(150, 216, 250), // Set container color for the FloatingActionButton
+                    contentColor = Color.White, // Set content color for the FloatingActionButton
                     onClick = {
                         val intent = Intent(context, AddDeck::class.java)
                         context.startActivity(intent)
                     }
                 ) {
-                    Icon(Icons.Filled.Add, "New Deck")
+                    Icon(Icons.Filled.Add, "New Deck") // Display an icon on the FloatingActionButton
                 }
             }
         }
     }
 }
 
+// Composable function for a clickable item
 @Composable
 fun ClickableItem(text: String, onClick: () -> Unit) {
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .clickable { onClick() },
-        color = Color(120, 200, 150)
+            .fillMaxWidth() // Set the width to fill the maximum available width
+            .padding(20.dp) // Apply padding to the Surface
+            .clickable { onClick() }, // Make the item clickable and trigger the provided onClick lambda
+        color = Color(120, 200, 150) // Set the background color for the item
     ) {
         Text(
-            text = text,
-            color = Color.White,
-            modifier = Modifier.padding(16.dp)
+            text = text, // Display the provided text
+            color = Color.White, // Set the text color
+            modifier = Modifier.padding(16.dp) // Apply padding to the text
         )
     }
 }

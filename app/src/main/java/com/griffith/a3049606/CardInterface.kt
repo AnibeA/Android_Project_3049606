@@ -23,33 +23,34 @@ class CardInterface : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Set the content of the activity to a FlashcardItem
             FlashcardItem()
-            }
         }
     }
+}
 
+// Function to preview the FlashcardItem
 @Preview
 @Composable
-fun FlashcardItem(){
+fun FlashcardItem() {
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(150, 216, 250)
-    ){
+        modifier = Modifier.fillMaxSize(), // Set the Surface to fill the entire available size
+        color = Color(150, 216, 250) // Set the background color of the Surface
+    ) {
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+            verticalArrangement = Arrangement.Center, // Align children vertically at the center
+            horizontalAlignment = Alignment.CenterHorizontally // Align children horizontally at the center
+        ) {
             Surface(
                 modifier = Modifier
-                    .height(250.dp)
-                    .width(350.dp)
-                    .padding(10.dp),
-                color = Color.White,
-                shape = RoundedCornerShape(20.dp)
-            ){
-                Text("Front of card text will be here ")
+                    .height(250.dp) // Set the height of the Surface
+                    .width(350.dp) // Set the width of the Surface
+                    .padding(10.dp), // Apply padding around the Surface
+                color = Color.White, // Set the background color of this Surface
+                shape = RoundedCornerShape(20.dp) // Apply rounded corners to the Surface
+            ) {
+                Text("Front of card text will be here ") // Display text on the Surface
             }
         }
-
     }
 }
