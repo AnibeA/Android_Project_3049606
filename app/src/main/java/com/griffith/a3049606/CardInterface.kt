@@ -1,23 +1,39 @@
 package com.griffith.a3049606
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
 
 class CardInterface : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,32 +41,117 @@ class CardInterface : ComponentActivity() {
         setContent {
             // Set the content of the activity to a FlashcardItem
             FlashcardItem()
+            /*//sensor initialisation
+            val context = LocalContext.current
+            val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+            sensorManager.registerListener(gyroscopeListener, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)*/
         }
     }
-}
 
-// Function to preview the FlashcardItem
-@Preview
-@Composable
-fun FlashcardItem() {
-    Surface(
-        modifier = Modifier.fillMaxSize(), // Set the Surface to fill the entire available size
-        color = Color(150, 216, 250) // Set the background color of the Surface
+    /*private val gyroscopeListener = object : SensorEventListener {
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+            // Not used in this example
+
+        }
+
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event?.sensor?.type == Sensor.TYPE_GYROSCOPE) {
+                // Process gyroscope sensor changes here
+                // Implement logic to interpret gyroscope data and trigger card flipping animations
+                // Example: Rotate the card based on gyroscope data
+                val rotationX = event.values[0]
+                val rotationY = event.values[1]
+                val rotationZ = event.values[2]
+
+                // Perform card flipping animations based on these values
+                // For simplicity, you may rotate the Text element inside the FlashcardItem
+                // using Modifier.rotate() based on the gyroscope readings
+            }
+        }
+}*/
+
+    data class CardFace(
+        val frontText: String,
+        val backText: String
+    )
+    var flashcardData: CardFace? = null // Initialize flashcardData as null
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun FlipCard(
+        cardFace: CardFace,
+        modifier: Modifier = Modifier,
+        back: @Composable () -> Unit = {},
+        front: @Composable () -> Unit = {},
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center, // Align children vertically at the center
-            horizontalAlignment = Alignment.CenterHorizontally // Align children horizontally at the center
+        val (isFlipped, setIsFlipped) = remember { mutableStateOf(false) } // Track the flipped state
+
+        val rotation = animateFloatAsState(
+            targetValue = if (isFlipped) 180f else 0f, // Set target rotation based on flipped state
+            animationSpec = tween(
+                durationMillis = 400,
+                easing = FastOutSlowInEasing,
+            )
+        )
+
+        Card(
+            onClick = { setIsFlipped(!isFlipped) }, // Update flipped state on click
+            modifier = modifier
+                .graphicsLayer {
+                    rotationY = rotation.value
+                    cameraDistance = 12f * density
+                },
         ) {
-            Surface(
-                modifier = Modifier
-                    .height(250.dp) // Set the height of the Surface
-                    .width(350.dp) // Set the width of the Surface
-                    .padding(10.dp), // Apply padding around the Surface
-                color = Color.White, // Set the background color of this Surface
-                shape = RoundedCornerShape(20.dp) // Apply rounded corners to the Surface
-            ) {
-                Text("Front of card text will be here ") // Display text on the Surface
+            if (rotation.value <= 90f) { // Check if front side should be shown
+                Box(
+                    Modifier.fillMaxSize()
+                ) {
+                    front()
+                }
+            } else { // Show back side if flipped
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            rotationY = 180f
+                        },
+                ) {
+                    back()
+                }
             }
         }
     }
+
+
+    // Function to preview the FlashcardItem
+@Preview
+@Composable
+    fun FlashcardItem() {
+        val cardFace = CardFace(
+            frontText = "Front of card text will be here",
+            backText = "Back of card text will be here"
+        )
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color(150, 216, 250)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                FlipCard( // Insert the FlipCard composable here
+                    cardFace = flashcardData ?: CardFace(
+                        frontText = "Default front text",
+                        backText = "Default back text"
+                    ), // Provide a default value if flashcardData is null
+                    modifier = Modifier.height(250.dp).width(350.dp),
+                    back = { Text(flashcardData?.backText ?: "Default back text") },
+                    front = { Text(flashcardData?.frontText ?: "Default front text") }
+                )
+            }
+        }
+    }
+
 }
+
