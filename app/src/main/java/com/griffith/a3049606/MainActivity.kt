@@ -78,11 +78,11 @@ fun HomeScreen() {
         ) {
             Surface(
                 Modifier.padding(25.dp), // Apply padding to the Surface
-                color = Color(120, 200, 150), // Set the background color
+                color = Color(150, 216, 250), // Set the background color
                 shape = RoundedCornerShape(10.dp) // Apply rounded corners to the Surface
             ) {
                 FloatingActionButton(
-                    containerColor = Color(150, 216, 250), // Set container color for the FloatingActionButton
+                    containerColor = Color(120, 200, 150), // Set container color for the FloatingActionButton
                     contentColor = Color.White, // Set content color for the FloatingActionButton
                     onClick = {
                         val intent = Intent(context, AddDeck::class.java)
@@ -94,7 +94,7 @@ fun HomeScreen() {
             }
         }
     }
-}
+}//120, 200, 150
 
 // Composable function for a clickable item
 @Composable
