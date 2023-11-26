@@ -22,12 +22,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
 
 // Main Activity
 class MainActivity : ComponentActivity() {
@@ -47,13 +50,14 @@ fun HomeScreen() {
 
     Surface(
         Modifier.fillMaxSize(), // Set the Surface to fill the entire available size
-        color = Color(150, 216, 250) // Set the background color
+        color = Color(101,115,126) // Set the background color
     ) {
         Column(
             verticalArrangement = Arrangement.Top, // Align children vertically at the top
             horizontalAlignment = Alignment.Start // Align children horizontally at the start
         ) {
-            LazyColumn {
+            //DynamicItemList()
+           LazyColumn {
                 item {
                     ClickableItem("Deck 1") {
                         // Handle item click, for example, navigate to another activity (CardInterface)
@@ -78,7 +82,7 @@ fun HomeScreen() {
         ) {
             Surface(
                 Modifier.padding(25.dp), // Apply padding to the Surface
-                color = Color(150, 216, 250), // Set the background color
+                color = Color(101,115,126), // Set the background color
                 shape = RoundedCornerShape(10.dp) // Apply rounded corners to the Surface
             ) {
                 FloatingActionButton(
@@ -94,7 +98,7 @@ fun HomeScreen() {
             }
         }
     }
-}//120, 200, 150
+}
 
 // Composable function for a clickable item
 @Composable
@@ -104,12 +108,39 @@ fun ClickableItem(text: String, onClick: () -> Unit) {
             .fillMaxWidth() // Set the width to fill the maximum available width
             .padding(20.dp) // Apply padding to the Surface
             .clickable { onClick() }, // Make the item clickable and trigger the provided onClick lambda
-        color = Color(120, 200, 150) // Set the background color for the item
+        color = Color.White // Set the background color for the item
     ) {
         Text(
             text = text, // Display the provided text
-            color = Color.White, // Set the text color
+            color = Color.Black, // Set the text color
             modifier = Modifier.padding(16.dp) // Apply padding to the text
         )
     }
 }
+
+
+/*@Composable
+fun DynamicItemList() {
+    val context = LocalContext.current // Retrieve the current context
+    val deckList = remember { mutableStateOf(listOf("Deck 1", "Deck 2")) } // Initialize an empty deck list
+
+    LazyColumn {
+        item {
+            ClickableItem("Add New Deck") {
+                // Handle item click, add a new deck to the list
+                deckList.value = deckList.value + listOf("New Deck")
+            }
+        }
+
+        for (deckName in deckList.value) {
+            item {
+                ClickableItem(deckName) {
+                    // Handle item click, navigate to the corresponding card interface
+                    val intent = Intent(context, CardInterface::class.java)
+                    context.startActivity(intent)
+                }
+            }
+        }
+    }
+}*/
+

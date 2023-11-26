@@ -162,7 +162,7 @@ class CardInterface : ComponentActivity() {
                 )
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color(150, 216, 250)
+                    color = Color(101,115,126)
                 ) {
                     Column(
                         verticalArrangement = Arrangement.Center,

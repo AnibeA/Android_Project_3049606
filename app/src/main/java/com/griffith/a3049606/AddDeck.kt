@@ -1,5 +1,6 @@
 package com.griffith.a3049606
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -29,10 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
 
 class AddDeck : ComponentActivity() {
 
@@ -48,9 +51,10 @@ class AddDeck : ComponentActivity() {
 @Preview
 @Composable
 fun NewDeck() {
+    val context = LocalContext.current // Retrieve the current context
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(150, 216, 250)
+        color = Color(101,115,126)
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -68,6 +72,7 @@ fun NewDeck() {
                 var deckName by remember { mutableStateOf(TextFieldValue("")) }
 
                 TextField(
+
                     modifier = Modifier.fillMaxWidth(),
                     value = deckName,
                     onValueChange = { deckName = it },
@@ -133,7 +138,10 @@ fun NewDeck() {
             shape = RoundedCornerShape(20.dp)
         ){
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                },
                 colors = ButtonDefaults.buttonColors(Color(120,200,150)),
                 modifier = Modifier
                     .size(90.dp, 40.dp) // Sets the width and height of the button
