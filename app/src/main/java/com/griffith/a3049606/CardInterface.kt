@@ -1,6 +1,7 @@
 package com.griffith.a3049606
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -14,13 +15,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.getSystemService
 
-const val DELTA_TIME: Float = 0.01f // Define DELTA_TIME as a constant with a value of 0.01 seconds (10 milliseconds)
+const val DELTA_TIME: Float = 0.1f // Define DELTA_TIME as a constant with a value of 0.01 seconds (10 milliseconds)
 
 val threshold = 5.0f // Declare threshold as a constant
 
@@ -85,10 +91,12 @@ class CardInterface : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Set up the sensor manager to access device sensors
             val sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-            val
 
-                    gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+
+            val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+            //Register a listener to listen for gyroscope sensor changes with normal delay
             sensorManager.registerListener(gyroscopeListener, gyroscope, SensorManager.SENSOR_DELAY_NORMAL)
 
             // Set the content of the activity to a FlashcardItem
@@ -107,45 +115,47 @@ class CardInterface : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun FlipCard(
-        cardFace: CardFace,
-        modifier: Modifier = Modifier,
-        back: @Composable () -> Unit = {},
-        front: @Composable () -> Unit = {},
+        cardFace: CardFace, // Represents the content for the card's front and back
+        modifier: Modifier = Modifier, // Modifier to customize the FlipCard layout
+        back: @Composable () -> Unit = {}, // Composable function for the back of the card
+        front: @Composable () -> Unit = {}, // Composable function for the front of the card
     ) {
-        // Remove unnecessary remember call
-        val (isFlipped, setIsFlipped) = remember { mutableStateOf(false) } // Track the flipped state
+        // Track the flipped state of the card
+        val (isFlipped, setIsFlipped) = remember { mutableStateOf(false) }
 
+        // Animate the rotation of the card based on the flipped state
         val rotation = animateFloatAsState(
-            targetValue = if (isFlipped) 180f else 0f, // Set target rotation based on flipped state
+            targetValue = if (isFlipped) 180f else 0f, // Set rotation based on flipped state
             animationSpec = tween(
-                durationMillis = 400,
-                easing = FastOutSlowInEasing,
+                durationMillis = 400, // Duration of the rotation animation
+                easing = FastOutSlowInEasing, // Easing curve for the animation
             )
         )
 
+        // Display a Card that rotates based on the flipped state
         Card(
-            onClick = { setIsFlipped(!isFlipped) }, // Update flipped state on click
+            onClick = { setIsFlipped(!isFlipped) }, // Flip the card on click
             modifier = modifier
                 .graphicsLayer {
-                    rotationY = rotation.value
-                    cameraDistance = 12f * density
+                    rotationY = rotation.value // Apply rotation based on animation state
+                    cameraDistance = 12f * density // Set the camera distance for the 3D effect
                 },
         ) {
-            if (rotation.value <= 90f) { // Check if front side should be shown
+            if (rotation.value <= 90f) { // Check if the front side should be displayed
                 Box(
-                    Modifier.fillMaxSize()
+                    Modifier.fillMaxSize() // Fill the entire space with the front content
                 ) {
-                    front()
+                    front() // Display the front content of the card
                 }
-            } else { // Show back side if flipped
+            } else { // Show the back side if the card is flipped
                 Box(
                     Modifier
                         .fillMaxSize()
                         .graphicsLayer {
-                            rotationY = 180f
+                            rotationY = 180f // Rotate to show the back side
                         },
                 ) {
-                    back()
+                    back() // Display the back content of the card
                 }
             }
         }
@@ -156,6 +166,7 @@ class CardInterface : ComponentActivity() {
         @Preview
         @Composable
             fun FlashcardItem() {
+                val context = LocalContext.current // Retrieve the current context
                 val cardFace = CardFace(
                     frontText = "Front of card text will be here",
                     backText = "Back of card text will be here"
@@ -177,6 +188,27 @@ class CardInterface : ComponentActivity() {
                             back = { Text(flashcardData?.backText ?: "Default back text") },
                             front = { Text(flashcardData?.frontText ?: "Default front text") }
                         )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.Bottom, // Align the row's children vertically at the bottom
+                        horizontalArrangement = Arrangement.End // Align the row's children horizontally at the end
+                    ) {
+                        Surface(
+                            Modifier.padding(25.dp), // Apply padding to the Surface
+                            color = Color(101, 115, 126), // Set the background color
+                            shape = RoundedCornerShape(10.dp) // Apply rounded corners to the Surface
+                        ) {
+                            FloatingActionButton(
+                                containerColor = Color(120, 200, 150), // Set container color for the FloatingActionButton
+                                contentColor = Color.White, // Set content color for the FloatingActionButton
+                                onClick = {
+                                    val intent = Intent(context, AddDeck::class.java)
+                                    context.startActivity(intent)
+                                }
+                            ) {
+                                Icon(Icons.Filled.Add, "Add new card") // Display an icon on the FloatingActionButton
+                            }
+                        }
                     }
                 }
             }

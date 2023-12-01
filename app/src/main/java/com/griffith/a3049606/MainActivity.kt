@@ -1,7 +1,5 @@
 package com.griffith.a3049606
 
-
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -31,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-
 // Main Activity
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,24 +47,25 @@ fun HomeScreen() {
 
     Surface(
         Modifier.fillMaxSize(), // Set the Surface to fill the entire available size
-        color = Color(101,115,126) // Set the background color
+        color = Color(101, 115, 126) // Set the background color
     ) {
         Column(
             verticalArrangement = Arrangement.Top, // Align children vertically at the top
             horizontalAlignment = Alignment.Start // Align children horizontally at the start
         ) {
-            //DynamicItemList()
-           LazyColumn {
+            // DynamicItemList() // Commented out for the purpose of this demonstration
+            // A LazyColumn containing clickable items
+            LazyColumn {
                 item {
+                    // Item representing "Deck 1" with click functionality to navigate to CardInterface
                     ClickableItem("Deck 1") {
-                        // Handle item click, for example, navigate to another activity (CardInterface)
                         val intent = Intent(context, CardInterface::class.java)
                         context.startActivity(intent)
                     }
                 }
                 item {
+                    // Item representing "Deck 2" with click functionality to navigate to CardInterface
                     ClickableItem("Deck 2") {
-                        // Handle item click, for example, navigate to another activity (CardInterface)
                         val intent = Intent(context, CardInterface::class.java)
                         context.startActivity(intent)
                     }
@@ -82,7 +80,7 @@ fun HomeScreen() {
         ) {
             Surface(
                 Modifier.padding(25.dp), // Apply padding to the Surface
-                color = Color(101,115,126), // Set the background color
+                color = Color(101, 115, 126), // Set the background color
                 shape = RoundedCornerShape(10.dp) // Apply rounded corners to the Surface
             ) {
                 FloatingActionButton(
@@ -117,30 +115,3 @@ fun ClickableItem(text: String, onClick: () -> Unit) {
         )
     }
 }
-
-
-/*@Composable
-fun DynamicItemList() {
-    val context = LocalContext.current // Retrieve the current context
-    val deckList = remember { mutableStateOf(listOf("Deck 1", "Deck 2")) } // Initialize an empty deck list
-
-    LazyColumn {
-        item {
-            ClickableItem("Add New Deck") {
-                // Handle item click, add a new deck to the list
-                deckList.value = deckList.value + listOf("New Deck")
-            }
-        }
-
-        for (deckName in deckList.value) {
-            item {
-                ClickableItem(deckName) {
-                    // Handle item click, navigate to the corresponding card interface
-                    val intent = Intent(context, CardInterface::class.java)
-                    context.startActivity(intent)
-                }
-            }
-        }
-    }
-}*/
-

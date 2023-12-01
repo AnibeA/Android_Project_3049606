@@ -104,7 +104,7 @@ fun NewDeck() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
                 )
             }
-
+            //space in between textfields
             Spacer(modifier = Modifier.size(10.dp))
 
             Surface(
@@ -138,6 +138,7 @@ fun NewDeck() {
             shape = RoundedCornerShape(20.dp)
         ){
             Button(
+                //goe back to the main activity when clicked using intent
                 onClick = {
                     val intent = Intent(context, MainActivity::class.java)
                     context.startActivity(intent)
