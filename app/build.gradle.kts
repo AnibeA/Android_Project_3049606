@@ -99,6 +99,12 @@ dependencies {
 
     //couroutine for main thread database access
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0") // Check for the latest version
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+
+
 
     implementation ("androidx.compose.runtime:runtime-livedata:<version>")
 
