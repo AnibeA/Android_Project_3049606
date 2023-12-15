@@ -1,11 +1,16 @@
+
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+
+// DatabaseHelper class for managing database creation and version management
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         const val DATABASE_NAME = "flipcard_database.db"
         const val DATABASE_VERSION = 1
+
+        // SQL statement to create the "decks" table
 
         private const val SQL_CREATE_DECKS = """
             CREATE TABLE decks (
@@ -13,6 +18,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 name TEXT
             );
         """
+
+        // SQL statement to create the "cards" table
 
         private const val SQL_CREATE_CARDS = """
             CREATE TABLE cards (
@@ -25,6 +32,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         """
     }
 
+    // Called when the database is created for the first time
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_DECKS)
         db.execSQL(SQL_CREATE_CARDS)
@@ -34,5 +43,4 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         // Handle database upgrade if needed
     }
 
-    // Methods to insert data, retrieve decks, and retrieve cards will go here
 }

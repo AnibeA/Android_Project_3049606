@@ -51,18 +51,21 @@ class AddDeck : ComponentActivity() {
 @Preview
 @Composable
 fun NewDeck() {
+    // States for managing text input
     var deckName by remember { mutableStateOf(TextFieldValue("")) }
     var cardFront by remember { mutableStateOf(TextFieldValue("")) }
     var cardBack by remember { mutableStateOf(TextFieldValue("")) }
     val context = LocalContext.current
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color(101,115,126)
+        color = Color(101,115,126) // Background color
     ) {
+        // Column layout for arranging elements vertically
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Text field for entering the deck name
             Surface(
                 modifier = Modifier
                     .height(70.dp)
@@ -71,7 +74,6 @@ fun NewDeck() {
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             ) {
-                // Use remember to create a state variable
                 var deckName by remember { mutableStateOf(TextFieldValue("")) }
 
                 TextField(
@@ -141,7 +143,7 @@ fun NewDeck() {
                 shape = RoundedCornerShape(20.dp)
             ){
                 Button(
-                    //goe back to the main activity when clicked using intent
+                    // Navigate back to the MainActivity when clicked
                     onClick = {
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
