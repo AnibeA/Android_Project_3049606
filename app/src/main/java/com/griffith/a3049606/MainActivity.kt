@@ -6,12 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+
 
 // MainActivity - the main entry point of the application
 class MainActivity : ComponentActivity() {
@@ -36,39 +39,57 @@ class MainActivity : ComponentActivity() {
     @Preview
     @Composable
     fun MainScreen() {
-        // Surface layout representing the main screen of the app
+        // Define a green color for the buttons
+        val buttonColor = Color(120, 200, 150) // Example green color
+
         Surface(
-            modifier = Modifier.fillMaxSize(), // Fills the entire screen
-            color = Color(101, 115, 126) // Background color
+            modifier = Modifier.fillMaxSize(),
+            color = Color(101, 115, 126)
         ) {
-            // Box layout for centering the button
-            Box(
-                contentAlignment = Alignment.Center // Aligns the child to the center
+            // Use Column instead of Box for vertical arrangement
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, // Center the buttons horizontally
+                verticalArrangement = Arrangement.Center, // Center the buttons vertically
+                modifier = Modifier.fillMaxSize()
             ) {
-                // Button to navigate to the DecksActivity
+                // First button to navigate to the DecksActivity
                 Button(
-                    onClick = { navigateToDecksActivity() }, // Set the onClick behavior
-                    shape = RoundedCornerShape(50), // Circular shape for the button
-                    modifier = Modifier.padding(16.dp) // Padding around the button
+                    onClick = { navigateToDecksActivity() },
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier.padding(16.dp),
+                    colors = ButtonDefaults.buttonColors( buttonColor) // Set button color
                 ) {
-                    // Icon inside the button
-                    Icon(
-                        imageVector = Icons.Filled.PlayArrow, // Play arrow icon
-                        contentDescription = "Go to Decks", // Accessibility description
-                        tint = Color.White // Icon color
-                    )
-                    // Text inside the button
+
                     Text(
-                        text = "View Decks", // Button text
-                        color = Color.White, // Text color
-                        modifier = Modifier.padding(start = 8.dp) // Padding to the start of the text
+                        text = "View Decks",
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
+                }
+
+                // Additional button to navigate to the AddDeckActivity
+                Button(
+                    onClick = { navigateToAddDeckActivity() }, // Add the corresponding function
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier.padding(16.dp),
+                    colors = ButtonDefaults.buttonColors(buttonColor) // Set button color
+                ) {
+
+                    Text(
+                        text = "Add deck",
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )                    // ...
                 }
             }
         }
     }
 
-    // Function to navigate to DecksActivity
+    // Function to navigate to AddDeckActivity
+    private fun navigateToAddDeckActivity() {
+        val intent = Intent(this, AddDeck::class.java) // Intent for AddDeckActivity
+        startActivity(intent)
+    }
     private fun navigateToDecksActivity() {
         val intent = Intent(this, DecksActivity::class.java) // Create an intent for DecksActivity
         startActivity(intent) // Start the activity

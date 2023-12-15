@@ -1,5 +1,6 @@
 package com.griffith.a3049606
 
+import DatabaseHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -22,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+
 
 // Decks Activity - main activity for the Decks screen
 class DecksActivity : ComponentActivity() {
@@ -38,7 +42,23 @@ class DecksActivity : ComponentActivity() {
 @Preview
 @Composable
 fun DecksScreen() {
-    val context = LocalContext.current // Retrieve the current context
+    val context = LocalContext.current
+    val dbHelper = DatabaseHelper(context)
+    val decksList = remember { mutableStateListOf<Pair<Long, String>>() }
+
+    LaunchedEffect(Unit) {
+        val cursor = dbHelper.getAllDecks()
+        val tempList = mutableListOf<Pair<Long, String>>()
+        while (cursor.moveToNext()) {
+            val deckId = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
+            val deckName = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+            tempList.add(Pair(deckId, deckName))
+        }
+        cursor.close()
+        decksList.clear()
+        decksList.addAll(tempList)
+    }
+
 
     // Main surface layout for the Decks screen
     Surface(
@@ -52,62 +72,69 @@ fun DecksScreen() {
         ) {
             // LazyColumn for displaying a scrollable list of items
             LazyColumn {
-                item { ClickableItem("Deck 1", context) }
-                item { ClickableItem("Deck 2", context) }
-                // Add more items as needed
+                items(decksList) { deck ->
+                    ClickableItem(deck.second, context, deck.first) // deck.second is the name, deck.first is the ID
+                }
             }
+            AddDeckButton(context) // Now it's outside DecksScreen
         }
-
-        // Floating action button for adding a new deck
-        AddDeckButton(context)
     }
 }
 
-// Composable function for the Add Deck button
-@Composable
-fun AddDeckButton(context: Context) {
-    // Row layout for positioning the button
-    Row(
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.End
-    ) {
-        // Surface for the button with padding and shape
-        Surface(
-            Modifier.padding(25.dp),
-            color = Color(101, 115, 126),
-            shape = RoundedCornerShape(10.dp)
+    // Composable function for the Add Deck button
+    @Composable
+    fun AddDeckButton(context: Context) {
+        // Row layout for positioning the button
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start
         ) {
-            // Floating action button with custom colors and click action
-            FloatingActionButton(
-                containerColor = Color(120, 200, 150), // Button color
-                contentColor = Color.White, // Icon color
-                onClick = { context.startActivity(Intent(context, AddDeck::class.java)) } // OnClick action
+            // Surface for the button with padding and shape
+            Surface(
+                Modifier.padding(25.dp),
+                color = Color(101, 115, 126),
+                shape = RoundedCornerShape(10.dp)
             ) {
-                Icon(Icons.Filled.Add, "New Deck") // Button icon
+                // Floating action button with custom colors and click action
+                FloatingActionButton(
+                    containerColor = Color(120, 200, 150), // Button color
+                    contentColor = Color.White, // Icon color
+                    onClick = {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                AddDeck::class.java
+                            )
+                        )
+                    } // OnClick action
+                ) {
+                    Icon(Icons.Filled.Add, "New Deck") // Button icon
+                }
             }
         }
     }
-}
 
-// Composable function for a clickable list item
-@Composable
-fun ClickableItem(text: String, context: Context) {
-    // Surface for each list item with click action
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp)
-            .clickable {
-                // Starts CardInterface activity on click
-                context.startActivity(Intent(context, CardInterface::class.java))
-            },
-        color = Color.White // Background color of the item
-    ) {
-        // Text inside the list item
-        Text(
-            text = text, // Display text
-            color = Color.Black, // Text color
-            modifier = Modifier.padding(16.dp) // Padding around the text
-        )
+    // Composable function for a clickable list item
+    @Composable
+    fun ClickableItem(text: String, context: Context, deckId: Long) {
+        // Surface for each list item with click action
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .clickable {
+                    val intent = Intent(context, CardInterface::class.java)
+                    intent.putExtra("deckId", deckId)
+                    context.startActivity(intent)
+                },
+            color = Color.White // Background color of the item
+        ) {
+            // Text inside the list item
+            Text(
+                text = text, // Display text
+                color = Color.Black, // Text color
+                modifier = Modifier.padding(16.dp) // Padding around the text
+            )
+        }
     }
-}
+

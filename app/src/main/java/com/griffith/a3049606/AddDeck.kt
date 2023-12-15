@@ -1,5 +1,6 @@
 package com.griffith.a3049606
 
+import DatabaseHelper
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -74,7 +75,6 @@ fun NewDeck() {
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             ) {
-                var deckName by remember { mutableStateOf(TextFieldValue("")) }
 
                 TextField(
 
@@ -97,9 +97,6 @@ fun NewDeck() {
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             ) {
-                // Use remember to create a state variable
-                var cardFront by remember { mutableStateOf(TextFieldValue("")) }
-
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = cardFront,
@@ -120,9 +117,6 @@ fun NewDeck() {
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             ) {
-                // Use remember to create a state variable
-                var cardBack by remember { mutableStateOf(TextFieldValue("")) }
-
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     value = cardBack,
@@ -143,15 +137,24 @@ fun NewDeck() {
                 shape = RoundedCornerShape(20.dp)
             ){
                 Button(
-                    // Navigate back to the MainActivity when clicked
                     onClick = {
+                        // Handle the click event here
+                        val dbHelper = DatabaseHelper(context)
+                        //val deckId = dbHelper.insertDeck(deckName.text)
+                        val deckNameText = deckName.text // Extract the text from TextFieldValue
+                        if (deckNameText.isNotBlank()) {
+                            val deckId = dbHelper.insertDeck(deckNameText)
+                            if (deckId != -1L) {
+                                dbHelper.insertCard(deckId, cardFront.text, cardBack.text)
+                            }
+                        }
+                        // Navigate back to the MainActivity
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
                     },
                     colors = ButtonDefaults.buttonColors(Color(120,200,150)),
-                    modifier = Modifier
-                        .size(90.dp, 40.dp) // Sets the width and height of the button
-                ){
+                    modifier = Modifier.size(90.dp, 40.dp)
+                ) {
                     Text("Done")
                 }
             }

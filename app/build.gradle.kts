@@ -104,8 +104,8 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
-
-
+    implementation("androidx.sqlite:sqlite-ktx:2.4.0")
+    
     implementation ("androidx.compose.runtime:runtime-livedata:<version>")
 
 }

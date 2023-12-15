@@ -32,7 +32,7 @@
             android:label="@string/title_activity_decks"
             android:theme="@style/Theme._3049606" />
 
-        <!-- CardInterface Activity -->
+        <!-- com.griffith.a3049606.CardInterface Activity -->
         <activity
             android:name=".CardInterface"
             android:exported="false"
