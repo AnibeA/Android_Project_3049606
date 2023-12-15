@@ -25,11 +25,8 @@ import androidx.compose.ui.unit.dp
 
 // Decks Activity
 class DecksActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContent {
             DecksScreen() // Set the content to the DecksScreen composable function
         }

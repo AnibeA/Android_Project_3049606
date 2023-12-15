@@ -51,7 +51,10 @@ class AddDeck : ComponentActivity() {
 @Preview
 @Composable
 fun NewDeck() {
-    val context = LocalContext.current // Retrieve the current context
+    var deckName by remember { mutableStateOf(TextFieldValue("")) }
+    var cardFront by remember { mutableStateOf(TextFieldValue("")) }
+    var cardBack by remember { mutableStateOf(TextFieldValue("")) }
+    val context = LocalContext.current
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(101,115,126)
@@ -128,32 +131,32 @@ fun NewDeck() {
                 )
             }
         }
-    Row( //set the row to the bottom right of the activity
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.End
-    ){
-        Surface(
-            Modifier.padding(25.dp),
-            //color = Color(120, 200, 150),
-            shape = RoundedCornerShape(20.dp)
+        Row( //set the row to the bottom right of the activity
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End
         ){
-            Button(
-                //goe back to the main activity when clicked using intent
-                onClick = {
-                    val intent = Intent(context, MainActivity::class.java)
-                    context.startActivity(intent)
-                },
-                colors = ButtonDefaults.buttonColors(Color(120,200,150)),
-                modifier = Modifier
-                    .size(90.dp, 40.dp) // Sets the width and height of the button
+            Surface(
+                Modifier.padding(25.dp),
+                //color = Color(120, 200, 150),
+                shape = RoundedCornerShape(20.dp)
             ){
-                Text("Done")
+                Button(
+                    //goe back to the main activity when clicked using intent
+                    onClick = {
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    colors = ButtonDefaults.buttonColors(Color(120,200,150)),
+                    modifier = Modifier
+                        .size(90.dp, 40.dp) // Sets the width and height of the button
+                ){
+                    Text("Done")
+                }
             }
+
+
+
         }
-
-            
-
-    }
 
     }
 }
